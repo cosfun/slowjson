@@ -14,9 +14,15 @@ annotation class slowJson(val value:String = "1")
 
 
 fun <V:Any> Any.slowJson(v:V){
-     val d=v.javaClass.declaredFields
-    d.forEach {
-        println(it.getAnnotation(slowJson::class.java).value)
+    val ac=this.javaClass.declaredFields
+    val fieldsName=HashMap<String,Any>()
+    ac.forEach {
+        fieldsName.put(it.name,it.get(this))
     }
-    println( )
+    val d=v.javaClass.declaredFields
+    d.forEach {
+        println(it.name+","+it.getAnnotation(slowJson::class.java).value)
+         it.set(v,fieldsName[it.getAnnotation(slowJson::class.java).value])
+
+    }
 }
